@@ -6,9 +6,19 @@
     <!-- Slider stuff -->
     <script type="text/javascript" src="lib/events.js">
     </script>
-    <script type="text/javascript" src="flot/jquery.js"></script>
-    <script type="text/javascript" src="flot/jquery.flot.js"></script>
-    <script type="text/javascript" src="flot/jquery.flot.resize.js"></script>
+    <script type="text/javascript" src="flot-master/source/jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="flot-master/source/jquery.canvaswrapper.js"></script>
+    <script language="javascript" type="text/javascript" src="flot-master/source/jquery.colorhelpers.js"></script>
+    <script type="text/javascript"
+    src="flot-master/source/jquery.flot.js"></script>
+<script language="javascript" type="text/javascript" src="flot-master/source/jquery.flot.saturated.js"></script>
+    <script language="javascript" type="text/javascript" src="flot-master/source/jquery.flot.browser.js"></script>
+        <script language="javascript" type="text/javascript" src="flot-master/source/jquery.flot.drawSeries.js"></script>
+
+    <script language="javascript" type="text/javascript" src="flot-master/source/jquery.flot.uiConstants.js"></script>
+        <script language="javascript" type="text/javascript" src="flot-master/source/jquery.flot.axislabels.js"></script>
+    <script type="text/javascript" src="flot-master/source/jquery.flot.resize.js"></script>
+    <script type="text/javascript" src="flot-master/source/jquery.flot.logaxis.js"></script>
     <style type="text/css">
       #slider { margin: 10px; }
     </style>
@@ -23,7 +33,7 @@
       var q = 10.0; // in dB
       var gain = 0.0; // in dB
       var source = null;
-      var noctaves = 8;
+      var noctaves = 10;
       var cutoffOctaves = 10;
 
       // canvas stuff
@@ -205,15 +215,23 @@
             break;
         }
 
+      console.log('magmin: ' + magmin + ' magmax: ' + magmax);
         $.plot($("#graph"),
-          [ { data : magData, label: "Mag (dB)" },
-            { data : phaseData, label: "Phase (deg)", yaxis: 2 }],
+          [ { data : magData, label: "Mag (dB)", lines: { lineWidth: 3} },
+            { data : phaseData, label: "Phase (deg)", lines: {
+            lineWidth: 3}, yaxis: 2 }],
           {
+            xaxis: {
+              mode: 'log',
+              ticks: 10,
+              showMinorTicks: true
+            },
             //xaxes: [ { ticks : tickScale } ],
             yaxes: [ { tickFormatter: dBFormatter,
                        min: magmin,
                        max: magmax,
                        //ticks : tickScale
+                       autoScale: "none"
                      },
                      {
                        // align if we are to the right
@@ -224,6 +242,7 @@
                        min: phasemin,
                        max: phasemax,
                        //ticks : tickScale
+                       autoScale: "none"
                       }],
             legend: { position: 'ne' }
           }
@@ -358,6 +377,7 @@
         AudioContext=AudioContext||webkitAudioContext;
         // Setup biquad and other audio stuff
         context = new AudioContext();
+        nyquist = context.sampleRate / 2;
         filter = context.createBiquadFilter();
         filter.type = "bandpass"; // Bandpass
         filter.frequency.value = normalizedCutoffToHz(cutoff, cutoffOctaves); // cutoff
@@ -446,7 +466,7 @@
 	<address><a href="mailto:rtoy@google.com">Raymond Toy</a></address>
 <!-- Created: Thu Oct 27 09:38:56 PDT 2011 -->
 <!-- hhmts start -->
-Last modified: Wed Oct 23 10:13:55 PDT 2019
+Last modified: Tue Jul 28 21:07:24 PDT 2020
 <!-- hhmts end -->
       </div>
     </div>
